@@ -18,21 +18,21 @@ For specific documentation please see:
 Before using the code please install [Node.js](https://nodejs.org) Version 12 on your system.
 
 Clone the repository:
-```
-# git clone https://github.com/bmsitech/qmcorenode-api.git
+```ShellSession
+git clone https://github.com/bmsitech/qmcorenode-api.git
 ```
 
 Install dependencies:
-```
-# cd qmcorenode-api
-# npm install
+```ShellSession
+cd qmcorenode-api
+npm install
 ```
 
 Run samples:
-```
-# node ./samples/query.js -h
+```ShellSession
+node ./samples/query.js -h
 ```
 or
-```
-# node ./samples/dosereport.js -h
+```ShellSession
+node ./samples/dosereport.js -h
 ```
