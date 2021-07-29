@@ -36,3 +36,6 @@ or
 ```ShellSession
 node ./samples/dosereport.js -h
 ```
+
+> NOTE for Customers: The "demo" account on the server may be disabled (Error 401). Please
+> contact us if you want to enable an account for testing.
