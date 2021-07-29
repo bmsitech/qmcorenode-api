@@ -1,0 +1,27 @@
+{
+  "tags": {
+    "allowUnknownTags": true
+  },
+  "source": {
+    "include": ["src"],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "docs"
+  },
+  "plugins": [],
+  "templates": {
+    "cleverLinks": true,
+    "monospaceLinks": true,
+    "footer": "EasyDoseQM Remote API Documentation",
+    "copyright": "(C) 2021 BMS Informationstechnologie GmbH",
+    "linenums": true,
+    "collapseSymbols": true,
+    "inverseNav": false
+  },
+  "opts": {
+    "encoding": "utf8",
+    "destination": "doc/client",
+    "recurse": true,
+    "private": true,
+    "sort": false
+  }
+}

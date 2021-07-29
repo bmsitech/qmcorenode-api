@@ -1,0 +1,26 @@
+{
+  "name": "qmcorenode-api",
+  "version": "1.0.0",
+  "description": "EasyDoseQM Client API Samples",
+  "main": "src/edqm.js",
+  "bin": {
+    "edqm-query": "./samples/query.js",
+    "edqm-dosereport": "./samples/dosereport.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "npx jsdoc -c jsdoc.json -t ./node_modules/ink-docstrap/template && npx redoc-cli bundle -o doc/api/index.html oas/easydose-simple.yaml"
+  },
+  "author": "Alexander Pipelka <pipelka@bms-austria.com>",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "ink-docstrap": "^1.3.2",
+    "jsdoc": "^3.6.7",
+    "jshint": "^2.13.0"
+  },
+  "dependencies": {
+    "dayjs": "^1.10.6",
+    "node-getopt": "^0.3.2",
+    "redoc-cli": "^0.12.2"
+  }
+}

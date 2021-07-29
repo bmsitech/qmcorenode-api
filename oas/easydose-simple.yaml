@@ -1,0 +1,358 @@
+openapi: 3.0.0
+info:
+  x-logo: {
+    url: "https://secretdemo.easydose.eu/images/easydose-pdf.svg"
+  }
+  description: 'Basic API specification for EasyDoseQM Versions >= 1.6.102'
+  version: 0.0.1
+  license: {
+    "name": "Apache 2.0",
+    "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+  }
+  title: EasyDose QMCoreNode API
+  contact:
+    email: support@bms-austria.com
+servers:
+  - url: 'https://secretdemo.easydose.eu:{port}/{basePath}'
+    description: The Demo API server
+    variables:
+      port:
+        enum:
+          - '80'
+          - '443'
+        default: '443'
+      basePath:
+        default: qmcorenode
+tags:
+  - name: users
+    description: >
+      User management. Currently only contains calls to authenticate a user.
+  - name: query
+    description: >
+      Data management. Query and analyze server data.
+paths:
+  /users/login:
+    post:
+      security: []
+      tags:
+        - users
+      summary: Authenticate user and start a new session
+      description: >
+        Send credentials to the server and authenticate the user.
+        The session token is returned in the response cookie. This
+        cookie must be used in all subsequent requests to the server.
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: username
+                password:
+                  type: string
+                  example: password
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/SessionData'
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                description: Session cookie, add this cookie to subsequent server requests for authentication.
+                example: EDQM=abcde12345; Path=/; HttpOnly
+        '400':
+          description: Login failed
+        '500':
+          description: Internal error
+  /users/logout:
+    get:
+      tags:
+        - users
+      summary: Sign out the current user and destroy server-side session
+      description: Removes the session information from the server.
+      operationId: logout
+      responses:
+        '200':
+          description: successful operation
+        '401':
+          description: Logout failed
+        '500':
+          description: Internal error
+  /query/produce:
+    post:
+      tags:
+        - query
+      summary: Query data from server
+      description: Sends the query information to the server for processing. The result will be cached on the server (default 300 seconds).
+      operationId: produce
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Query'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/QueryResultSet'
+        '400':
+          description: Bad Data
+        '500':
+          description: Internal error
+  /analysis/produce:
+    post:
+      tags: after 
+        authentication
+        - query
+      summary: Analyze data from server
+      description: >
+        Sends the analysis information to the server for processing. An 
+        analysis is equivalent to a SQL query using aggregate functions. 
+        The "group by" clause is the "x" parameter. And the "y" parameter 
+        holds all aggregated fields. The result will be cached on the server 
+        (default 300 seconds).
+      operationId: analyze
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Analysis'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/QueryResultSet'
+        '400':
+          description: Bad Data
+        '500':
+          description: Internal error
+          
+security:
+  - qmcorenode_auth: []
+components:
+  securitySchemes:
+    qmcorenode_auth:
+      type: apiKey
+      in: cookie
+      name: EDQM
+      description: >
+        EasyDoseQM uses a session based authentication scheme with tokens.
+        The session token is returned as cookie within the response of the 
+        authentication request. Use this token (cookie) in all requests.
+  schemas:
+    SortEntry:
+      type: object
+      properties:
+        field:
+          type: string
+        dir:
+          enum:
+            - asc
+            - desc
+    Sort:
+      type: array
+      items:
+        $ref: '#/components/schemas/SortEntry'
+    FilterValue:
+      type: object
+      properties:
+        operator:
+          type: string
+        value:
+          type: string
+        field:
+          type: string
+    Filter:
+      type: object
+      properties:
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/FilterValue'
+        logic:
+          type: string
+    SqlWithId:
+      type: object
+      required:
+        - id
+        - from
+        - data
+      properties:
+        id:
+          type: string
+          description: Name of the ID property stored in the dataset
+        from:
+          type: string
+          description: Database table to update
+        data:
+          type: object
+          description: Dataset in key/value pair scheme
+    Fields:
+      type: array
+      items:
+        type: string
+    SqlQuery:
+      type: object
+      required:
+        - fields
+        - from
+      properties:
+        fields:
+          $ref: '#/components/schemas/Fields'
+        from:
+          type: string
+        filter:
+          $ref: '#/components/schemas/Filter'
+        sort:
+          $ref: '#/components/schemas/Sort'
+    ResultSet:
+      type: object
+      properties:
+        result:
+          type: array
+          description: Array of datasets
+          items:
+            $ref: '#/components/schemas/ResultRow'
+        count:
+          description: Total number of datasets in result. Can differ from the number of rows in the result if paging is enabled ("take" / "skip" request parameters).
+          type: integer
+    ResultRow:
+      type: object
+      properties:
+        "{field1}":
+          type: string
+        "{field2}":
+          type: string
+        "{fieldX}":
+          type: string
+    Query:
+      type: object
+      required:
+        - fields
+      properties:
+        fields:
+          $ref: '#/components/schemas/Fields'
+        filter:
+          $ref: '#/components/schemas/Filter'
+        sort:
+          $ref: '#/components/schemas/Sort'
+        force:
+          type: boolean
+          description: do not use cached data (optional)
+        skip:
+          type: integer
+          description: skip rows from the result set (optional)
+        take:
+          type: integer
+          description: number of rows to fetch from result set (optional)
+    Analysis:
+      type: object
+      required:
+        - fields
+      properties:
+        fields:
+          $ref: '#/components/schemas/Fields'
+        filter:
+          $ref: '#/components/schemas/Filter'
+        sort:
+          $ref: '#/components/schemas/Sort'
+        force:
+          type: boolean
+          description: do not use cached data (optional)
+        skip:
+          type: integer
+          description: skip rows from the result set (optional)
+        take:
+          type: integer
+          description: number of rows to fetch from result set (optional)
+        x:
+          type: string
+          description: Category of the analysis (X-Axis)
+        y:
+          $ref: '#/components/schemas/QueryYAxis'
+    QueryYAxis:
+      type: object
+      properties:
+        "{fieldname}":
+          type: array
+          items:
+            type: string
+            description: Analysis aggregate (min, max, sum, ...)
+    QueryMeta:
+      type: object
+    QueryResultSet:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/QueryMeta'
+        result:
+          type: array
+          description: Array of datasets
+          items:
+            $ref: '#/components/schemas/ResultRow'
+        count:
+          description: Total number of datasets in result. Can differ from the number of rows in the result if paging is enabled ("take" / "skip" request parameters).
+          type: integer
+    SessionData:
+      type: object
+      properties:
+        userid:
+          type: integer
+        username:
+          type: string
+        modarray:
+          type: array
+          items:
+            type: integer
+        permission:
+          type: string
+        language:
+          type: string
+        fullname:
+          type: string
+        canChangePassword:
+          type: boolean
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        fullname:
+          type: string
+        language:
+          type: string
+        password:
+          type: string
+        permissions:
+          type: string
+        section:
+          type: string
+        modarray:
+          type: array
+          items:
+            type: integer
+    TextValuePair:
+      type: object
+      properties:
+        text:
+          type: string
+        value:
+          type: object
