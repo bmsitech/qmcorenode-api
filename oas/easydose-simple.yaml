@@ -113,8 +113,7 @@ paths:
           description: Internal error
   /analysis/produce:
     post:
-      tags: after 
-        authentication
+      tags:
         - query
       summary: Analyze data from server
       description: >
