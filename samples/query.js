@@ -9,7 +9,7 @@ const opt = new getopt([
     ["s", "host=ARG", "EasydoseQM server URL", "https://secretdemo.easydose.eu"],
     ["u", "username=ARG", "username", "demo"],
     ["p", "password=ARG", "password", "demo21"],
-    ["d", "date=ARG", "AccessionNumber to query", dayjs().format('YYYYMMDD')],
+    ["d", "date=ARG", "date to query", dayjs().format('YYYYMMDD')],
     ["h" , "help", "display this help"]
 ]).bindHelp().parseSystem();
 
