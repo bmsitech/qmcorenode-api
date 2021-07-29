@@ -1,6 +1,6 @@
 ![EasyDoseQM](https://github.com/bmsitech/qmcorenode-api/blob/master/doc/images/easydose-pdf.png?raw=true)
 
-# QMCoreNode API Specification
+# QMCoreNode API
 RESTful API specification of the EasyDoseQM server
 
 This repository provides a stripped down API specification for common data query tasks.
@@ -10,7 +10,7 @@ It also provides a client interface and sample code for Node.js.
 
 For specific documentation please see:
 
-- [QMCoreNode API specification](https://bmsitech.github.io/qmcorenode-api/api)
+- [QMCoreNode API specification (OpenAPI)](https://bmsitech.github.io/qmcorenode-api/api)
 - [Javascript Client Interface](https://bmsitech.github.io/qmcorenode-api/client)
 
 ## Running the sample clients
@@ -37,5 +37,5 @@ or
 node ./samples/dosereport.js -h
 ```
 
-> NOTE for Customers: The "demo" account on the server may be disabled (Error 401). Please
+> Note for customers: The "demo" account on the server may be disabled (Error 401). Please
 > contact us if you want to enable an account for testing.
