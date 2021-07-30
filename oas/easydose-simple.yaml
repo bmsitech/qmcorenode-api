@@ -26,7 +26,7 @@ servers:
 tags:
   - name: users
     description: >
-      User management. Currently only contains calls to authenticate a user.
+      User management. Currently only contains calls to authenticate users.
   - name: query
     description: >
       Data management. Query and analyze server data.
@@ -69,7 +69,9 @@ paths:
                 description: Session cookie, add this cookie to subsequent server requests for authentication.
                 example: EDQM=abcde12345; Path=/; HttpOnly
         '400':
-          description: Login failed
+          description: Bad Data
+        '401':
+          description: Wrong credentials
         '500':
           description: Internal error
   /users/logout:
@@ -287,7 +289,7 @@ components:
           $ref: '#/components/schemas/QueryYAxis'
     QueryYAxis:
       type: object
-      description: Contains fieldnames each with an array or aggregates
+      description: Contains fieldnames each with an array of aggregates
       properties:
         "{fieldname}":
           type: array
