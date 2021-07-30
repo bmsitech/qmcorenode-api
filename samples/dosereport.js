@@ -22,7 +22,9 @@ const client = new edqm.Client(opt.options.host);
 const accessionnumber = opt.options.accessionnumer;
 
 if(!accessionnumber) {
-    return opt.showHelp();
+    opt.showHelp();
+    console.log("\nPlease provide an accession number (-a xxxxx).\n");
+    return;
 }
 
 (async() => {
