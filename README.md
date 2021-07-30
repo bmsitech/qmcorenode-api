@@ -15,7 +15,7 @@ For specific documentation please see:
 
 ## Running the sample clients
 
-Before using the code please install [Node.js](https://nodejs.org) Version 12 on your system.
+Before using the code please install [Node.js](https://nodejs.org) 12+ on your system.
 
 Clone the repository:
 ```ShellSession
@@ -37,5 +37,5 @@ or
 node ./samples/dosereport.js -h
 ```
 
-> Note for customers: The "demo" account on the server may be disabled (Error 401). Please
-> contact us if you want to enable an account for testing.
+> Note for customers: The "demo" account on the server may be disabled (Error 401).
+> Please contact us if you want to enable an account for testing purposes.
