@@ -41,8 +41,7 @@ if(!accessionnumber) {
             fields: [fieldname, "serieskey", "accessionnumber"],
             filter: {
                 filters: [
-                    {field: "accessionnumber", operator: "eq", value: accessionnumber},
-                    {field: fieldname, operator: "gt", value: 0},
+                    {field: "accessionnumber", operator: "eq", value: accessionnumber}
                 ]
             },
             x: "serieskey",
@@ -57,17 +56,15 @@ if(!accessionnumber) {
             force: true
         };
 
-        let response = await client.analysis(analysis);
+        const { meta, result } = await client.analysis(analysis);
 
-        const rows = response.result;
-        if(!rows || !rows.length) {
+        if(!result || !result.length) {
             continue;
         }
 
-        const row = rows[0];
-        const unit = response.meta.units.dose.name;
+        const unit = meta.units.dose.name;
 
-        console.log(`${dosename[fieldname]} ${row.dose} ${unit}`);
+        console.log(`${dosename[fieldname]} ${result[0].dose} ${unit}`);
     }
 
     await client.logout();
