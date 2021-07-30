@@ -15,6 +15,7 @@ const opt = new getopt([
     ["u", "username=ARG", "username", "demo"],
     ["p", "password=ARG", "password", "demo21"],
     ["a", "accessionnumer=ARG", "accessionnumber (required)"],
+    ["j", "json", "format result as JSON object"],
     ["h" , "help", "display this help"]
 ]).bindHelp().parseSystem();
 
@@ -33,11 +34,13 @@ if(!accessionnumber) {
         password: opt.options.password,
     });
 
-    console.log("Accessionnumber:", accessionnumber);
-    console.log("-----------------------------------------------------------");
+    const output = {
+        accessionnumber: accessionnumber,
+        report: []
+    };
 
     for(const fieldname of [ "dap", "dlp", "dl_dap", "organdose" ]) {
-        let analysis = {
+        const analysis = {
             fields: [fieldname, "serieskey", "accessionnumber"],
             filter: {
                 filters: [
@@ -62,12 +65,24 @@ if(!accessionnumber) {
             continue;
         }
 
-        const unit = meta.units.dose.name;
-
-        console.log(`${dosename[fieldname]} ${result[0].dose} ${unit}`);
+        output.report.push({
+            name: dosename[fieldname],
+            dose: result[0].dose,
+            unit: meta.units.dose.name
+        });
     }
 
     await client.logout();
+
+    if(opt.options.json) {
+        console.log(JSON.stringify(output, null, 2));
+    }
+    else {
+        console.log("Accessionnumber:", accessionnumber);
+        console.log("-----------------------------------------------------------");
+
+        output.report.forEach(item => console.log(`${item.name} ${item.dose} ${item.unit}`));
+    }
 })().catch((e) => {
     console.log("ERROR:", e);
 });
