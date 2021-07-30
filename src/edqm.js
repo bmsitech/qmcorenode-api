@@ -121,7 +121,7 @@ var edqm = function() {
          * @param {string} options.sort[].dir - Sort direction
          * @param {number} options.take - Limit number of result rows (optional).
          * @param {number} options.skip - Skip rows from the beginning of the result (optional).
-         * @param {boolean} force - Skip the server cache
+         * @param {boolean} options.force - Skip the server cache
          * @param {Client~callback} [callback] - The callback that handles the response (optional).
          * @returns {Promise} A Promise object is returned if the callback parameter is omitted.
          */
@@ -164,11 +164,11 @@ var edqm = function() {
          * @param {string} options.sort[].dir - Sort direction
          * @param {number} options.take - Limit number of result rows (optional).
          * @param {number} options.skip - Skip rows from the beginning of the result (optional).
-	     * @param {string} x - Category of the analysis (X-Axis / Group - Field)
-	     * @param {Object} y - Analysis data definition
-	     * @param {string} y.field - Aggregate of the field
-	     * @param {Object} as - Result fieldname mapping
-         * @param {boolean} force - Skip the server cache
+	     * @param {string} options.x - Category of the analysis (X-Axis / Group - Field)
+	     * @param {Object} options.y - Analysis data definition
+	     * @param {string} options.y.field - Aggregate of the field
+	     * @param {Object} options.as - Result fieldname mapping
+         * @param {boolean} options.force - Skip the server cache
          * @param {Client~callback} [callback] - The callback that handles the response (optional).
          * @returns {Promise} A Promise object is returned if the callback parameter is omitted.
          */
